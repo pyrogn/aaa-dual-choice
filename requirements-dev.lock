@@ -14,8 +14,6 @@ anyio==4.3.0
     # via httpx
     # via starlette
     # via watchfiles
-appnope==0.1.4
-    # via ipykernel
 asttokens==2.4.1
     # via stack-data
 attrs==23.2.0

@@ -70,13 +70,14 @@ def execute_sql(query, params):
 
 
 def init_db():
+    # подумать, как лучше перезаписывать таблицу
     execute_sql(
         """
         drop table if exists image_selections
         """,
         [],
     )
-    # maybe we should store additional information from request?
+    # добавить таймштамп (автоматический) ?
     execute_sql(
         """
         CREATE TABLE IF NOT EXISTS image_selections (
