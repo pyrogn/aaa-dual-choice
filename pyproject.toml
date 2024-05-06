@@ -1,0 +1,42 @@
+[project]
+name = "dual-choice"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "Pavel", email = "60060559+pyrogn@users.noreply.github.com" }
+]
+dependencies = [
+    "pydantic>=2.7.0",
+    "fastapi>=0.110.2",
+    "uvicorn[standard]>=0.29.0",
+    "slowapi>=0.1.9",
+    "limits>=3.11.0",
+    "redis>=5.0.4",
+    "psycopg[binary,pool]>=3.1.18",
+    "pandas>=2.2.2",
+    "ibis[duckdb]>=3.3.0",
+    "choix>=0.3.5",
+    "numpy>=1.26.4",
+]
+requires-python = ">= 3.12"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+    "pytest>=8.2.0",
+    "tqdm>=4.66.2",
+    "pip>=24.0",
+    "ipykernel>=6.29.4",
+    "ipywidgets>=8.1.2",
+    "nbconvert>=7.16.3",
+]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dual_choice"]

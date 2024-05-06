@@ -1,0 +1,53 @@
+exclude: '^dual_choice$'
+repos:
+# add files or folders to exclude if needed
+-   repo: local
+    hooks:
+    -   id: clean-ipynb-output
+        name: Clean Jupyter Notebook Output
+        entry: rye run jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace
+        language: system
+        files: \.ipynb$
+        # exclude: |
+        #     (?x)^(
+        #         folder1/|
+        #         folder2/|
+        #         .*_special\.ipynb
+        #     )
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+    -   id: check-yaml
+    -   id: check-added-large-files
+    -   id: check-ast
+    -   id: debug-statements
+
+-     repo: https://github.com/astral-sh/ruff-pre-commit
+      # Ruff version.
+      rev: v0.4.2
+      hooks:
+        # Run the linter.
+        - id: ruff
+          # types_or: [ python, pyi, jupyter ]
+          args: [ --fix ]
+        # Run the formatter.
+        - id: ruff-format
+          # types_or: [ python, pyi, jupyter ]
+
+# -   repo: https://github.com/pre-commit/mirrors-mypy
+#     rev: 'v1.2.0'
+#     hooks:
+#     -   id: mypy
+#         args: [--ignore-missing-imports, --warn-unused-ignores, --show-error-codes]
+#         additional_dependencies: [types-all]
+
+-   repo: local
+    hooks:
+    -   id: pytest
+        name: pytest
+        entry: rye run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
