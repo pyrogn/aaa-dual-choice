@@ -2,7 +2,9 @@ services:
   app:
     build: .
     ports:
-      - "8000:8000"
+      - target: 8000
+        published: 8000
+        mode: host
     depends_on:
       - db
       - redis
@@ -12,6 +14,13 @@ services:
     volumes:
       - ./src:/app/src
       - ./data:/app/data
+    profiles:
+      - dev
+      - prod
+    command: >
+              uvicorn src.dual_choice.main:app --host 0.0.0.0 --port 8000 --reload
+
+
   db:
     image: postgres
     environment:
@@ -20,17 +29,36 @@ services:
       - POSTGRES_DB=database
     volumes:
       - db-data:/var/lib/postgresql/data
-    ports: # для теста
-      - "5432:5432"
+    # do not publish in production
+    ports:
+      - target: 5432
+        published: 5432
+        mode: host
     networks:
       - default
 
   redis:
     image: redis
-    ports: # для теста
-      - "6379:6379"
+    # do not publish it production
+    ports:
+      - target: 6379
+        published: 6379
+        mode: host
     volumes:
       - redis-data:/data
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - target: 80
+        published: 80
+        mode: host
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
+    profiles:
+      - prod
 
 volumes:
   db-data:
