@@ -46,6 +46,8 @@ services:
         mode: host
     volumes:
       - redis-data:/data
+    networks:
+      - default
 
   nginx:
     image: nginx:alpine

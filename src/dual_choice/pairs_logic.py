@@ -5,14 +5,9 @@ from pathlib import Path
 
 def generate_image_pairs(data_directory: str) -> list[tuple[str, str, str]]:
     """
-    Generate unique image pairs from the specified data directory.
-
-    Args:
-        data_directory (str): Path to the directory containing image folders.
-
-    Returns:
-        List[Tuple[Path, Path, Path]]: A list of tuples, each containing
-        a folder path and two image paths.
+    Создать пары изображений формата
+        [папка абс., отн. путь в папке до изобр. 1, ...до изобр 2]
+    например ['/data/232', '2.jpg', '0.jpg']
     """
     data_path = Path(data_directory)
     folders = [folder for folder in data_path.iterdir() if folder.is_dir()]
@@ -20,26 +15,19 @@ def generate_image_pairs(data_directory: str) -> list[tuple[str, str, str]]:
     random.shuffle(folders)
 
     for folder in folders:
-        images = list(folder.iterdir())
+        images = [i.name for i in folder.iterdir() if i.is_file()]
         image_combinations = list(combinations(images, 2))
         random.shuffle(image_combinations)
         for comb in image_combinations:
-            pairs.append((str(folder), *list(map(str, comb))))
+            pairs.append((str(folder), comb[0], comb[1]))
     random.shuffle(pairs)
     return pairs
 
 
 def get_image_paths(pair) -> tuple[str, str]:
     """
-    Given a tuple containing folder and image paths, return a list
-    of the two image paths in random order.
-
-    Args:
-        pair (Tuple[Path, Path, Path]): A tuple containing a folder path
-        and two image paths.
-
-    Returns:
-        List[Path]: A list containing the two image paths in random order.
+    Из пары формата выше получить два корретных путя для пары фото
+    К примеру ['/data/232/3.jpg', '/data/232/0.jpg']
     """
     folder, image1, image2 = pair
     images = [str(Path(folder) / image) for image in (image1, image2)]

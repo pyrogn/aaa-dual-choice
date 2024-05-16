@@ -1,6 +1,5 @@
 """AB testing image enhancements."""
 
-import json
 import os
 from contextlib import asynccontextmanager
 
@@ -13,26 +12,12 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from dual_choice.pairs_logic import generate_image_pairs, get_paths_from_pair
+from dual_choice.pairs_logic import generate_image_pairs, get_image_paths
 
 redis_client = redis.Redis(host="redis", port=6379, db=0)
 redis_client.flushdb()
 DATABASE_URL = os.getenv("DATABASE_URL")
 assert DATABASE_URL
-
-
-async def get_user_pairs(user_id: str) -> list[tuple]:
-    if await redis_client.llen(user_id) == 0:
-        return []
-    return json.loads(await redis_client.lindex(user_id, 0))
-
-
-async def rm_first_user_pair(user_id: str) -> None:
-    print("removed:", await redis_client.lpop(user_id))
-
-
-async def add_user_pairs(user_id: str, pairs: list[tuple]):
-    await redis_client.rpush(user_id, *[json.dumps(i) for i in pairs])
 
 
 @asynccontextmanager
@@ -154,7 +139,7 @@ async def save_selection(request: Request, selection: ImageSelection):
 async def get_new_images(request: Request):
     user_id = get_user_id_from_request(request)
     pairs = get_user_pairs(user_id)
-    pair = get_paths_from_pair(pairs)
+    pair = get_image_paths(pairs)
     print(pair)
     return {"images": [pair[0], pair[1]]}
 
