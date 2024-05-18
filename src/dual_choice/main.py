@@ -1,5 +1,6 @@
-"""AB testing image enhancements."""
+"""Main FastAPI app."""
 
+# пока что мусорка, не редактировал
 import os
 from contextlib import asynccontextmanager
 
@@ -111,15 +112,6 @@ async def save_selection(request: Request, selection: ImageSelection):
             INSERT INTO image_selections (user_id, image_id, selected_id, other_id)
             VALUES (%s, %s, %s, %s)
             """,
-            (
-                user_id,
-                selection.imageId,
-                selection.selectedSubId,
-                selection.nonSelectedSubId,
-            ),
-        )
-        print(
-            "inserted: ",
             (
                 user_id,
                 selection.imageId,
