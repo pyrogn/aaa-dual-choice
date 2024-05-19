@@ -19,6 +19,8 @@ services:
       - prod
     command: >
               uvicorn src.dual_choice.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - dual-choice-network
 
 
   db:
@@ -35,7 +37,7 @@ services:
         published: 5432
         mode: host
     networks:
-      - default
+      - dual-choice-network
 
   redis:
     image: redis
@@ -47,7 +49,7 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - default
+      - dual-choice-network
 
   nginx:
     image: nginx:alpine
@@ -61,7 +63,12 @@ services:
       - app
     profiles:
       - prod
+    networks:
+      - dual-choice-network
 
 volumes:
   db-data:
   redis-data:
+
+networks:
+  dual-choice-network:
