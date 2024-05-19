@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,25 +15,22 @@ from dual_choice.redis_logic import (
     redis_client,
 )
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await db.init_pool()
+    await db.init_db(clean=True)
+    yield
+    await db.pool.close()
+
+
+app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="src/dual_choice/templates")
 
 data_directory = "data"
 
 # Mount the 'data' directory as a static directory
 app.mount("/data", StaticFiles(directory=data_directory), name="data")
-
-
-# replace this with lifespan
-@app.on_event("startup")
-async def startup():
-    await db.init_pool()
-    await db.init_db(clean=False)
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    await db.pool.close()
 
 
 def get_user_id_from_request(request: Request) -> str:
