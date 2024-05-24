@@ -1,4 +1,4 @@
-.PHONY: up upd upp down clean_db test analysis
+.PHONY: up upd upp down clean_db test analysis copy_data
 
 up:
 	docker compose up -d
@@ -19,4 +19,7 @@ test:
 	pytest
 
 analysis:
-	docker compose exec app python /app/src/analysis.py
+	docker compose exec app python results/process_selections.py
+
+copy_data:
+	scp -r data student@51.250.19.218:~/aaa-dual-choice

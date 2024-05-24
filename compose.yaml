@@ -14,6 +14,7 @@ services:
     volumes:
       - ./src:/app/src
       - ./data:/app/data
+      - ./results:/app/results
     profiles:
       - dev
       - prod
