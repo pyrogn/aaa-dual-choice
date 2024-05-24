@@ -5,8 +5,9 @@
 ## TODO
 
 - [ ] Make more stable index.html and backend (sometimes image updates twice)
-- [ ] Add async to postgres and redis
-- [ ] Fix security problems (exposed services)
+- [x] Add async to postgres and redis
+- [x] Add tests
+- [ ] Fix security problems (exposed services and open passwords)
 - [ ] Add simple ddos protection (limits)
-- [ ] Add tests and benchmarks
 - [ ] Use github actions to deploy application?
+- [ ] Add some niceties (progress bar, better html)

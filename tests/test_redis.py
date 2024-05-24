@@ -14,7 +14,9 @@ from dual_choice.redis_logic import (
 
 # for some reason I cannot reuse event loop in a second function
 # don't like hardcode redis url
-@pytest_asyncio.fixture(scope="function")
+
+
+@pytest_asyncio.fixture(scope="function", autouse=True)
 async def setup_redis():
     redis_url = "redis://localhost:6379/0"
     redis_client = redis.from_url(redis_url)
@@ -25,8 +27,7 @@ async def setup_redis():
 
 
 @pytest.mark.asyncio
-async def test_add_and_get_user_pairs(setup_redis, setup_test_directory):
-    redis_client = setup_redis
+async def test_add_and_get_user_pairs(setup_test_directory):
     user_id = "test_user"
     pairs = generate_image_pairs(str(setup_test_directory))
 

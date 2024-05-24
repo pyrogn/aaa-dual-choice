@@ -26,7 +26,7 @@ def generate_image_pairs(data_directory: str) -> list[tuple[str, str, str]]:
 
 def get_image_paths(pair) -> tuple[str, str]:
     """
-    Из пары формата выше получить два корретных путя для пары фото
+    Из пары формата выше получить два корретных пути для пары фото
     К примеру ['/data/232/3.jpg', '/data/232/0.jpg']
     """
     folder, image1, image2 = pair

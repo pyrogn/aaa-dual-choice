@@ -1,8 +1,10 @@
+import os
 import redis.asyncio as redis
 import json
 
 # for real app it should be host=redis
-redis_client = redis.Redis(host="redis", port=6379, db=0)
+redis_url = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+redis_client = redis.from_url(redis_url)
 
 
 async def get_user_first_pair(user_id: str) -> tuple[str, str, str] | None:
