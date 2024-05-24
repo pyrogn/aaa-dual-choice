@@ -8,8 +8,8 @@
 - [x] Add async to postgres and redis
 - [x] Add tests
 - [x] Add script to calculate statistics    
-- [ ] Think of state when you will reload app (redis, db cleanings)
+- [x] Think of state when you will reload app (redis, db cleanings)
 - [ ] Fix security problems (exposed services and open passwords)
 - [ ] Add simple ddos protection (limits)
 - [ ] Use github actions to deploy application?
-- [ ] Add some niceties (progress bar, better html)
+- [x] Add some niceties (progress bar, better html)

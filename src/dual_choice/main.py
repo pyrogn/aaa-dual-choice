@@ -19,8 +19,9 @@ from dual_choice.redis_logic import (
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await db.init_pool()
-    await db.init_db(clean=True)
-    await redis_client.flushall(asynchronous=True)
+    # we clean database manually (in Makefile)
+    await db.init_db(clean=False)
+    # await redis_client.flushall(asynchronous=True)
     yield
     await db.pool.close()
 
@@ -49,6 +50,9 @@ async def get_image_for_user(user_id: str):
 
         # do something with database (because we won't be able to insert new rows)
         pairs = generate_image_pairs(data_directory)
+        # единожды подсчитываем кол-во пар (у всех одинаковое)
+        if await redis_client.exists("num_pairs") == 0:
+            await redis_client.set("num_pairs", len(pairs))
         await add_user_pairs(user_id, pairs)
     return await get_user_first_pair(user_id)
 
@@ -63,8 +67,19 @@ async def read_root(request: Request):
         raise HTTPException(status_code=404, detail="No image pairs available")
 
     image_paths = get_image_paths(pair)
+    n_pairs = await redis_client.llen(user_id)
+    tot_pairs = int(await redis_client.get("num_pairs"))
+    print(n_pairs, tot_pairs)
+
     return templates.TemplateResponse(
-        "index.html", {"request": request, "images": image_paths, "user_id": user_id}
+        "index.html",
+        {
+            "request": request,
+            "images": image_paths,
+            "user_id": user_id,
+            "cur_progress": tot_pairs - n_pairs,
+            "tot_progress": tot_pairs,
+        },
     )
 
 
@@ -116,6 +131,14 @@ async def get_new_images(request: Request):
 
     image_paths = get_image_paths(pair)
     return {"images": image_paths}
+
+
+@app.get("/progress")
+async def get_progress(request: Request):
+    user_id = get_user_id_from_request(request)
+    cur_progress = await redis_client.llen(user_id)
+    tot_progress = int(await redis_client.get("num_pairs"))
+    return {"cur_progress": tot_progress - cur_progress, "tot_progress": tot_progress}
 
 
 async def get_selection_count(

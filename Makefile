@@ -14,6 +14,7 @@ down:
 
 clean_db:
 	docker compose exec db psql -U user -d database -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+	docker compose exec redis redis-cli flushdb
 
 test:
 	pytest
