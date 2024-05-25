@@ -2,6 +2,7 @@ services:
   app:
     build: .
     ports:
+    # should I leave this port exposed in production?
       - target: 8000
         published: 8000
         mode: host
@@ -9,8 +10,8 @@ services:
       - db
       - redis
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/database
-      - REDIS_URL=redis://redis:6379/0
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
     volumes:
       - ./src:/app/src
       - ./data:/app/data
@@ -27,26 +28,16 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=database
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - db-data:/var/lib/postgresql/data
-    # do not publish in production
-    ports:
-      - target: 5432
-        published: 5432
-        mode: host
     networks:
       - dual-choice-network
 
   redis:
     image: redis
-    # do not publish it production
-    ports:
-      - target: 6379
-        published: 6379
-        mode: host
     volumes:
       - redis-data:/data
     networks:

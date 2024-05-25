@@ -1,13 +1,19 @@
+import os
+from dotenv import load_dotenv
 import pandas as pd
 import psycopg
 import choix
 import numpy as np
 
+resp = load_dotenv()
+assert resp
+
 db_host = "db"
 db_port = "5432"
-db_name = "database"
-db_user = "user"
-db_password = "password"
+db_name = os.getenv("POSTGRES_DB")
+db_user = os.getenv("POSTGRES_USER")
+db_password = os.getenv("POSTGRES_PASSWORD")
+assert db_password, "where is password?"
 
 with psycopg.connect(
     host=db_host,

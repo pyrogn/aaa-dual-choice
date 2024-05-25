@@ -4,10 +4,7 @@ FROM python:3.12
 
 WORKDIR /app
 
-COPY requirements.lock .
-COPY requirements-dev.lock .
-COPY pyproject.toml .
-COPY src/ .
+COPY requirements.lock requirements-dev.lock pyproject.toml src/ .env ./
 
 # slow option
 

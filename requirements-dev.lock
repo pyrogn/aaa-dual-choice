@@ -6,6 +6,7 @@
 #   features: []
 #   all-features: true
 #   with-sources: false
+#   generate-hashes: false
 
 -e file:.
 annotated-types==0.6.0
@@ -179,6 +180,7 @@ python-dateutil==2.9.0.post0
     # via jupyter-client
     # via pandas
 python-dotenv==1.0.1
+    # via dual-choice
     # via uvicorn
 python-multipart==0.0.9
     # via fastapi

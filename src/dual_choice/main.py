@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,6 +15,8 @@ from dual_choice.redis_logic import (
     add_user_pairs,
     redis_client,
 )
+
+load_dotenv()
 
 
 @asynccontextmanager
@@ -69,7 +72,7 @@ async def read_root(request: Request):
     image_paths = get_image_paths(pair)
     n_pairs = await redis_client.llen(user_id)
     tot_pairs = int(await redis_client.get("num_pairs"))
-    print(n_pairs, tot_pairs)
+    # print(n_pairs, tot_pairs)
 
     return templates.TemplateResponse(
         "index.html",

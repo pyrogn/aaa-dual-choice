@@ -23,4 +23,4 @@ analysis:
 	docker compose exec app python results/process_selections.py
 
 copy_data:
-	scp -r data student@51.250.19.218:~/aaa-dual-choice
+	rsync -av --delete data/ student@51.250.19.218:~/aaa-dual-choice/data/
