@@ -39,10 +39,13 @@ app.mount("/data", StaticFiles(directory=data_directory), name="data")
 
 
 def get_user_id_from_request(request: Request) -> str:
+    forwarded_for = request.headers.get("X-Forwarded-For")
+    if forwarded_for:
+        ip = forwarded_for.split(",")[0]
+    else:
+        ip = request.client.host
+    user_id = f"{ip}_{request.headers.get('User-Agent', 'no user agent')}"
     assert request.client
-    user_id = (
-        f"{request.client.host}_{request.headers.get('User-Agent', 'no user agent')}"
-    )
     return user_id
 
 
