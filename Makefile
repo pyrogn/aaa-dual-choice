@@ -10,7 +10,7 @@ upp:
 	docker compose --profile prod up -d
 
 down:
-	docker compose down
+	docker compose --profile "*" down
 
 clean_db:
 	docker compose exec db psql -U user -d database -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
