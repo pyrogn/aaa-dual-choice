@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install uv
-          uv pip install requirements-dev.lock
+          uv pip install --system -r requirements-dev.lock
 
       - name: Run tests
         run: make test
