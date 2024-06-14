@@ -2,7 +2,6 @@ services:
   app:
     build: .
     ports:
-    # should I leave this port exposed in production?
       - target: 8001
         published: 8001
         mode: host
@@ -55,6 +54,21 @@ services:
       - app
     profiles:
       - prod
+    networks:
+      - dual-choice-network
+  
+  test:
+    build: .
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - ./data:/app/data
+      - ./results:/app/results
+    profiles:
+      - test
     networks:
       - dual-choice-network
 

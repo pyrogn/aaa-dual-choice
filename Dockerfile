@@ -1,22 +1,12 @@
-# copypase for now
-
-FROM python:3.12
+FROM python:3.12-slim
 
 WORKDIR /app
 
-COPY requirements.lock requirements-dev.lock pyproject.toml src/ .env ./
+COPY requirements.lock pyproject.toml .env ./
 
-# slow option
-
-# RUN sed -i '/^-e/d' requirements.lock
-# RUN pip install --no-cache-dir -r requirements.lock
-# RUN pip install .
-
-# faster option
 RUN pip install uv
-RUN uv pip install --system -r requirements.lock
+RUN uv pip install --system -e .
 
-EXPOSE 8000
+EXPOSE 8001
 
-# в прод без reload
-CMD ["uvicorn", "src.dual_choice.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "src.dual_choice.main:app", "--host", "0.0.0.0", "--port", "8000"]

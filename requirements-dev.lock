@@ -51,6 +51,7 @@ email-validator==2.1.1
     # via fastapi
 executing==2.0.1
     # via stack-data
+fakeredis==2.23.2
 fastapi==0.111.0
     # via dual-choice
     # via fastapi-cli
@@ -193,6 +194,7 @@ pyzmq==26.0.3
     # via jupyter-client
 redis==5.0.4
     # via dual-choice
+    # via fakeredis
 referencing==0.35.1
     # via jsonschema
     # via jsonschema-specifications
@@ -214,6 +216,8 @@ slowapi==0.1.9
 sniffio==1.3.1
     # via anyio
     # via httpx
+sortedcontainers==2.4.0
+    # via fakeredis
 soupsieve==2.5
     # via beautifulsoup4
 stack-data==0.6.3

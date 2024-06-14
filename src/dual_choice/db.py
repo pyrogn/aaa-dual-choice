@@ -5,9 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql://user:password@localhost:5432/database"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
 assert DATABASE_URL
 
 

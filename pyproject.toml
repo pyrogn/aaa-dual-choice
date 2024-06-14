@@ -34,6 +34,7 @@ dev-dependencies = [
     "ipywidgets>=8.1.2",
     "nbconvert>=7.16.3",
     "pytest-asyncio>=0.23.6",
+    "fakeredis>=2.23.2",
 ]
 
 [tool.hatch.metadata]
