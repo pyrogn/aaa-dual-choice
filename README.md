@@ -11,16 +11,26 @@
 
 https://github.com/pyrogn/aaa-dual-choice/assets/60060559/d64a314c-48ae-4465-ad53-6c6c9f7625b3
 
+## Установка
+
+- Установить Rye, just
+- Иметь запущенный docker engine
+- `rye sync`
 
 ## Запуск
 
-- через make something
-- `make test` для тестирования (локальное, e2e)
-- `make down` для выключения
+- `just up-dev` и смотреть на http://localhost:8001
+- `just up-prod` и смотреть на http://localhost
+- `just down` для выключения
+- `just analysis` получить результаты исследования
 
 ## Тесты
 
-Вот над этим я и поработаю ещё
+Данный проект обложен тестами (для обучения):
+- `just test` запускает юнит тесты (с моками для redis, postgres)
+- `just test-db-redis` запускает тесты над настоящими redis, postgres
+- `just test-browser` запускает тесты над фронтендом через seleniumbase
+- `just test-full` запускает все тесты
 
 ## Данные
 
@@ -31,6 +41,7 @@ https://github.com/pyrogn/aaa-dual-choice/assets/60060559/d64a314c-48ae-4465-ad5
 ## TODO
 
 - [x] Better app
-- [ ] Better script to calculate statistics (how to run)
-- [ ] How to change passwords
-- [ ] Make better tests
+- [x] How to change passwords
+- [x] Better script to calculate statistics (how to run)
+- [x] Better justfile with up and down, test, clean db
+- [x] Make basic and full test suite

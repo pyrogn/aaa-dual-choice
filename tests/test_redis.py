@@ -4,7 +4,7 @@ import pytest
 import pytest_asyncio
 from fakeredis.aioredis import FakeRedis
 from dual_choice.pairs_logic import generate_image_pairs
-from setup_dir import setup_test_directory  # noqa: F401
+from tests.setup_dir import setup_test_directory  # noqa: F401
 from dual_choice.redis_logic import UserMemoryManagement
 
 

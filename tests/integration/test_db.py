@@ -1,23 +1,26 @@
 import asyncio
-import os
+from dotenv import dotenv_values
 import psycopg
 import pytest
 import pytest_asyncio
 from dual_choice.db import Database
 
 
+config = dotenv_values(".env")
+
+
 @pytest_asyncio.fixture(scope="function")
 async def setup_database():
-    db = Database(os.getenv("DATABASE_URL"))
+    db = Database(config["DATABASE_URL"])
     await db.init_pool()
     await db.init_db(clean=True)
-    yield db.pool
+    yield db
     await db.pool.close()
 
 
 @pytest.mark.asyncio
 async def test_insert_selection(setup_database):
-    pool = setup_database
+    db = setup_database
     await db.insert_selection("user1", 1, 2, 3)
     await db.insert_selection("user2", 1, 2, 3)
     await db.insert_selection("user3", 1, 3, 2)
@@ -28,7 +31,7 @@ async def test_insert_selection(setup_database):
     n_ins = 5
 
     # count rows
-    async with pool.connection() as conn:
+    async with db.pool.connection() as conn:
         async with conn.cursor() as cur:
             await cur.execute("select count(1) as cnt from image_selections")
             res = await cur.fetchone()
@@ -62,7 +65,7 @@ async def test_insert_selection(setup_database):
     await concurrent_inserts()
 
     # count rows
-    async with pool.connection() as conn:
+    async with db.pool.connection() as conn:
         async with conn.cursor() as cur:
             await cur.execute("select count(1) as cnt from image_selections")
             res = await cur.fetchone()
@@ -73,18 +76,11 @@ async def test_insert_selection(setup_database):
 
 @pytest.mark.asyncio
 async def test_insert_selection2(setup_database):
-    pool = setup_database
+    db = setup_database
     await db.insert_selection("user1", 1, 2, 3)
-    async with pool.connection() as conn:
+    async with db.pool.connection() as conn:
         async with conn.cursor() as cur:
             await cur.execute("select count(1) as cnt from image_selections")
             res = await cur.fetchone()
             print(res)
             assert int(res[0]) == 1
-
-
-# @pytest.mark.asyncio
-# async def test_get_prop_selected_empty():
-#     result = await get_prop_selected(999, 999, 999)
-#     assert result["selected_count"] == 0
-#     assert result["total_count"] == 0

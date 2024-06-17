@@ -68,6 +68,7 @@ services:
       - ./results:/app/results
     profiles:
       - test
+    command: ["pytest", "--headless"]
     networks:
       - dual-choice-network
 

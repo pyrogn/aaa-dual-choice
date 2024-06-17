@@ -15,10 +15,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - uses: extractions/setup-just@v1
+
       - name: Install dependencies
         run: |
           pip install uv
           uv pip install --system -r requirements-dev.lock
 
-      - name: Run tests
-        run: make test
+      - name: Run unit tests
+        run: just test
+
+      - name: Run integration tests
+        run: just test-db-redis

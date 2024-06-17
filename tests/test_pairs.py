@@ -3,7 +3,7 @@
 from math import comb
 from pathlib import Path
 from dual_choice.pairs_logic import generate_image_pairs, get_image_paths
-from setup_dir import setup_test_directory  # noqa: F401
+from tests.setup_dir import setup_test_directory  # noqa: F401
 
 
 def test_generate_image_pairs(setup_test_directory):

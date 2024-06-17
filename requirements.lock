@@ -15,7 +15,7 @@ anyio==4.3.0
     # via httpx
     # via starlette
     # via watchfiles
-certifi==2024.2.2
+certifi==2024.6.2
     # via httpcore
     # via httpx
 choix==0.3.5
@@ -82,7 +82,7 @@ pydantic==2.7.1
     # via fastapi
 pydantic-core==2.18.2
     # via pydantic
-pygments==2.17.2
+pygments==2.18.0
     # via rich
 python-dateutil==2.9.0.post0
     # via pandas
@@ -114,7 +114,7 @@ starlette==0.37.2
     # via fastapi
 typer==0.12.3
     # via fastapi-cli
-typing-extensions==4.11.0
+typing-extensions==4.12.2
     # via fastapi
     # via limits
     # via psycopg

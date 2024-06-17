@@ -21,22 +21,40 @@ asttokens==2.4.1
     # via stack-data
 attrs==23.2.0
     # via jsonschema
+    # via outcome
     # via referencing
+    # via seleniumbase
+    # via trio
 beautifulsoup4==4.12.3
     # via nbconvert
+    # via seleniumbase
+behave==1.2.6
+    # via seleniumbase
 bleach==6.1.0
     # via nbconvert
-certifi==2024.2.2
+certifi==2024.6.2
     # via httpcore
     # via httpx
+    # via requests
+    # via selenium
+    # via seleniumbase
+chardet==5.2.0
+    # via seleniumbase
+charset-normalizer==3.3.2
+    # via requests
+    # via seleniumbase
 choix==0.3.5
     # via dual-choice
 click==8.1.7
     # via typer
     # via uvicorn
+colorama==0.4.6
+    # via seleniumbase
 comm==0.2.2
     # via ipykernel
     # via ipywidgets
+cssselect==1.2.0
+    # via seleniumbase
 debugpy==1.8.1
     # via ipykernel
 decorator==5.1.1
@@ -49,6 +67,11 @@ dnspython==2.6.1
     # via email-validator
 email-validator==2.1.1
     # via fastapi
+exceptiongroup==1.2.1
+    # via seleniumbase
+execnet==2.1.1
+    # via pytest-xdist
+    # via seleniumbase
 executing==2.0.1
     # via stack-data
 fakeredis==2.23.2
@@ -57,11 +80,17 @@ fastapi==0.111.0
     # via fastapi-cli
 fastapi-cli==0.0.2
     # via fastapi
+fasteners==0.19
+    # via seleniumbase
 fastjsonschema==2.19.1
     # via nbformat
+filelock==3.15.1
+    # via seleniumbase
 h11==0.14.0
     # via httpcore
+    # via seleniumbase
     # via uvicorn
+    # via wsproto
 httpcore==1.0.5
     # via httpx
 httptools==0.6.1
@@ -72,10 +101,14 @@ idna==3.7
     # via anyio
     # via email-validator
     # via httpx
+    # via requests
+    # via seleniumbase
+    # via trio
 importlib-resources==6.4.0
     # via limits
 iniconfig==2.0.0
     # via pytest
+    # via seleniumbase
 ipykernel==6.29.4
 ipython==8.24.0
     # via ipykernel
@@ -108,6 +141,7 @@ limits==3.11.0
     # via slowapi
 markdown-it-py==3.0.0
     # via rich
+    # via seleniumbase
 markupsafe==2.1.5
     # via jinja2
     # via nbconvert
@@ -116,6 +150,7 @@ matplotlib-inline==0.1.7
     # via ipython
 mdurl==0.1.2
     # via markdown-it-py
+    # via seleniumbase
 mistune==3.0.2
     # via nbconvert
 nbclient==0.10.0
@@ -133,24 +168,43 @@ numpy==1.26.4
     # via scipy
 orjson==3.10.3
     # via fastapi
+outcome==1.3.0.post0
+    # via seleniumbase
+    # via trio
 packaging==24.0
     # via ipykernel
     # via limits
     # via nbconvert
     # via pytest
+    # via pytest-rerunfailures
+    # via seleniumbase
 pandas==2.2.2
     # via dual-choice
 pandocfilters==1.5.1
     # via nbconvert
+parameterized==0.9.0
+    # via seleniumbase
+parse==1.20.2
+    # via behave
+    # via parse-type
+    # via seleniumbase
+parse-type==0.6.2
+    # via behave
+    # via seleniumbase
 parso==0.8.4
     # via jedi
+pdbp==1.5.0
+    # via seleniumbase
 pexpect==4.9.0
     # via ipython
 pip==24.0
-platformdirs==4.2.1
+    # via seleniumbase
+platformdirs==4.2.2
     # via jupyter-core
+    # via seleniumbase
 pluggy==1.5.0
     # via pytest
+    # via seleniumbase
 prompt-toolkit==3.0.43
     # via ipython
 psutil==5.9.8
@@ -165,18 +219,45 @@ ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.2
     # via stack-data
+py==1.11.0
+    # via seleniumbase
 pydantic==2.7.1
     # via dual-choice
     # via fastapi
 pydantic-core==2.18.2
     # via pydantic
-pygments==2.17.2
+pygments==2.18.0
     # via ipython
     # via nbconvert
+    # via pdbp
     # via rich
-pytest==8.2.0
+    # via seleniumbase
+pynose==1.5.1
+    # via seleniumbase
+pyotp==2.9.0
+    # via seleniumbase
+pysocks==1.7.1
+    # via urllib3
+pytest==8.2.1
     # via pytest-asyncio
+    # via pytest-html
+    # via pytest-metadata
+    # via pytest-ordering
+    # via pytest-rerunfailures
+    # via pytest-xdist
+    # via seleniumbase
 pytest-asyncio==0.23.6
+pytest-html==2.0.1
+    # via seleniumbase
+pytest-metadata==3.1.1
+    # via pytest-html
+    # via seleniumbase
+pytest-ordering==0.6
+    # via seleniumbase
+pytest-rerunfailures==14.0
+    # via seleniumbase
+pytest-xdist==3.6.1
+    # via seleniumbase
 python-dateutil==2.9.0.post0
     # via jupyter-client
     # via pandas
@@ -188,6 +269,7 @@ python-multipart==0.0.9
 pytz==2024.1
     # via pandas
 pyyaml==6.0.1
+    # via seleniumbase
     # via uvicorn
 pyzmq==26.0.3
     # via ipykernel
@@ -198,32 +280,53 @@ redis==5.0.4
 referencing==0.35.1
     # via jsonschema
     # via jsonschema-specifications
+requests==2.31.0
+    # via seleniumbase
 rich==13.7.1
+    # via seleniumbase
     # via typer
 rpds-py==0.18.0
     # via jsonschema
     # via referencing
+sbvirtualdisplay==1.3.0
+    # via seleniumbase
 scipy==1.13.0
     # via choix
+selenium==4.21.0
+    # via seleniumbase
+seleniumbase==4.27.5
+setuptools==70.0.0
+    # via seleniumbase
 shellingham==1.5.4
     # via typer
 six==1.16.0
     # via asttokens
+    # via behave
     # via bleach
+    # via parse-type
     # via python-dateutil
+    # via seleniumbase
 slowapi==0.1.9
     # via dual-choice
 sniffio==1.3.1
     # via anyio
     # via httpx
+    # via seleniumbase
+    # via trio
 sortedcontainers==2.4.0
     # via fakeredis
+    # via seleniumbase
+    # via trio
 soupsieve==2.5
     # via beautifulsoup4
+    # via seleniumbase
 stack-data==0.6.3
     # via ipython
 starlette==0.37.2
     # via fastapi
+tabcompleter==1.3.0
+    # via pdbp
+    # via seleniumbase
 tinycss2==1.3.0
     # via nbconvert
 tornado==6.4
@@ -241,20 +344,33 @@ traitlets==5.14.3
     # via nbclient
     # via nbconvert
     # via nbformat
+trio==0.25.1
+    # via selenium
+    # via seleniumbase
+    # via trio-websocket
+trio-websocket==0.11.1
+    # via selenium
+    # via seleniumbase
 typer==0.12.3
     # via fastapi-cli
-typing-extensions==4.11.0
+typing-extensions==4.12.2
     # via fastapi
     # via limits
     # via psycopg
     # via psycopg-pool
     # via pydantic
     # via pydantic-core
+    # via selenium
+    # via seleniumbase
     # via typer
 tzdata==2024.1
     # via pandas
 ujson==5.9.0
     # via fastapi
+urllib3==2.2.1
+    # via requests
+    # via selenium
+    # via seleniumbase
 uvicorn==0.29.0
     # via dual-choice
     # via fastapi
@@ -270,7 +386,12 @@ webencodings==0.5.1
     # via tinycss2
 websockets==12.0
     # via uvicorn
+wheel==0.43.0
+    # via seleniumbase
 widgetsnbextension==4.0.10
     # via ipywidgets
 wrapt==1.16.0
     # via deprecated
+wsproto==1.2.0
+    # via seleniumbase
+    # via trio-websocket
