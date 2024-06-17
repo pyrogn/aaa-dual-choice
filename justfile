@@ -30,7 +30,7 @@ test:
     pytest --ignore tests/integration/
 
 # Run tests on real redis and database
-test-db-redis: up && down
+test-db-redis: up-dev && down
     docker compose run test pytest tests/integration/test_db.py tests/integration/test_redis.py
 
 # Run an e2e test in a browser
