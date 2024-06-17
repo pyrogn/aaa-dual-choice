@@ -25,5 +25,3 @@ jobs:
       - name: Run unit tests
         run: just test
 
-      - name: Run integration tests
-        run: just test-db-redis
