@@ -4,7 +4,7 @@ set dotenv-load
 default:
     @just --list
 
-# Start the application
+# Start the application with core services
 up:
     docker compose up --build -d
 
@@ -50,7 +50,3 @@ analysis: up
 # Copy data to a remote server
 copy-data:
     rsync -av --delete data/ student@51.250.19.218:~/aaa-dual-choice/data/
-
-# Run the application with an option to clean the database
-up-clean:
-    docker compose run --rm app python src/dual_choice/main.py --clean

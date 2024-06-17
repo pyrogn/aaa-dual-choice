@@ -37,12 +37,13 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="src/dual_choice/templates")
 
-data_directory = "data-min"
+data_directory = "data-min"  # folder with versions of images
 
 app.mount(f"/{data_directory}", StaticFiles(directory=data_directory), name="data")
 
 
 def get_user_id_from_request(request: Request) -> str:
+    """UserID = IP + UserAgent."""
     forwarded_for = request.headers.get("X-Forwarded-For")
     ip = forwarded_for.split(",")[0] if forwarded_for else request.client.host
     user_id = f"{ip}_{request.headers.get('User-Agent', 'no user agent')}"
@@ -50,6 +51,7 @@ def get_user_id_from_request(request: Request) -> str:
 
 
 async def get_image_for_user(user_id: str):
+    """Get pair of images for user and get None if he's completed the survey."""
     if await user_memory.is_new_user(user_id):
         pairs = generate_image_pairs(data_directory)
         await user_memory.add_user_pairs(user_id, pairs)
