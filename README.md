@@ -34,9 +34,11 @@ https://github.com/pyrogn/aaa-dual-choice/assets/60060559/d64a314c-48ae-4465-ad5
 
 ## Данные
 
-Написать:
-- Как положить фото
-- Как получить результаты
+Каждая фотография имеет несколько вариантов улучшений и лежит в репозитории
+
+
+<img width="264" alt="image" src="https://github.com/pyrogn/aaa-dual-choice/assets/60060559/0d189dd8-1c91-49c9-9b50-ad89252e4e58">
+
 
 ## TODO
 
