@@ -184,7 +184,11 @@
       fetch("/new-images")
         .then((response) => response.json())
         .then((data) => {
-          updateImages(data.images);
+          if (data.images.length === 0) {
+            window.location.href = "/";
+          } else {
+            updateImages(data.images);
+          }
         });
     }
 

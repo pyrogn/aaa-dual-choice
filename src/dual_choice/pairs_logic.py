@@ -24,6 +24,18 @@ def generate_image_pairs(data_directory: str) -> list[tuple[str, str, str]]:
     return pairs
 
 
+def count_image_pairs(data_directory: str) -> int:
+    data_path = Path(data_directory)
+    folders = [folder for folder in data_path.iterdir() if folder.is_dir()]
+    total_pairs = 0
+
+    for folder in folders:
+        images = [i.name for i in folder.iterdir() if i.is_file()]
+        total_pairs += len(list(combinations(images, 2)))
+
+    return total_pairs
+
+
 def get_image_paths(pair) -> tuple[str, str]:
     """
     Из пары формата выше получить два корретных пути для пары фото

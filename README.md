@@ -30,7 +30,7 @@ https://github.com/pyrogn/aaa-dual-choice/assets/60060559/d64a314c-48ae-4465-ad5
 
 ## TODO
 
-- [ ] Better app
+- [x] Better app
 - [ ] Better script to calculate statistics (how to run)
 - [ ] How to change passwords
 - [ ] Make better tests

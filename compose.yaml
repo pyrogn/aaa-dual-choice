@@ -12,8 +12,8 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=${REDIS_URL}
     volumes:
-      - ./src:/app/src
       - ./data:/app/data
+      - ./data-min:/app/data-min
       - ./results:/app/results
     profiles:
       - dev
@@ -63,7 +63,6 @@ services:
       - db
       - redis
     volumes:
-      - ./src:/app/src
       - ./tests:/app/tests
       - ./data:/app/data
       - ./results:/app/results

@@ -1,12 +1,14 @@
 import asyncio
+import os
 import psycopg
 import pytest
 import pytest_asyncio
-from dual_choice.db import db
+from dual_choice.db import Database
 
 
 @pytest_asyncio.fixture(scope="function")
 async def setup_database():
+    db = Database(os.getenv("DATABASE_URL"))
     await db.init_pool()
     await db.init_db(clean=True)
     yield db.pool

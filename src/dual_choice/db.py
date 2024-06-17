@@ -1,11 +1,5 @@
-import os
 from typing import Any
 from psycopg_pool import AsyncConnectionPool
-from dotenv import load_dotenv
-
-load_dotenv()
-
-DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 class Database:
@@ -81,6 +75,3 @@ class Database:
                 )
                 result = await cur.fetchone()
                 return result
-
-
-db = Database(DATABASE_URL)

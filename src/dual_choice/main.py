@@ -6,25 +6,30 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from psycopg.errors import UniqueViolation
+import redis.asyncio as redis
+import os
 
-from dual_choice.db import db
-from dual_choice.pairs_logic import generate_image_pairs, get_image_paths
-from dual_choice.redis_logic import (
-    get_user_first_pair,
-    rm_first_user_pair,
-    add_user_pairs,
-    redis_client,
+from dual_choice.db import Database
+from dual_choice.pairs_logic import (
+    generate_image_pairs,
+    get_image_paths,
+    count_image_pairs,
 )
+from dual_choice.redis_logic import UserMemoryManagement
 
 load_dotenv()
+redis_url = os.getenv("REDIS_URL")
+redis_client = redis.from_url(redis_url)
+
+user_memory = UserMemoryManagement(redis_client=redis_client)
+DATABASE_URL = os.getenv("DATABASE_URL")
+db = Database(DATABASE_URL)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await db.init_pool()
-    # we clean database manually (in Makefile)
     await db.init_db(clean=False)
-    # await redis_client.flushall(asynchronous=True)
     yield
     await db.pool.close()
 
@@ -32,50 +37,43 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 templates = Jinja2Templates(directory="src/dual_choice/templates")
 
-data_directory = "data"
+data_directory = "data-min"
 
-# Mount the 'data' directory as a static directory
-app.mount("/data", StaticFiles(directory=data_directory), name="data")
+app.mount(f"/{data_directory}", StaticFiles(directory=data_directory), name="data")
 
 
 def get_user_id_from_request(request: Request) -> str:
     forwarded_for = request.headers.get("X-Forwarded-For")
-    if forwarded_for:
-        ip = forwarded_for.split(",")[0]
-    else:
-        ip = request.client.host
+    ip = forwarded_for.split(",")[0] if forwarded_for else request.client.host
     user_id = f"{ip}_{request.headers.get('User-Agent', 'no user agent')}"
-    assert request.client
     return user_id
 
 
 async def get_image_for_user(user_id: str):
-    if await redis_client.llen(user_id) == 0:
-        # # print that you are very good, thank you
-        # raise HTTPException(status_code=404, detail="Game is over!!!")
-
-        # do something with database (because we won't be able to insert new rows)
+    if await user_memory.is_new_user(user_id):
         pairs = generate_image_pairs(data_directory)
-        # единожды подсчитываем кол-во пар (у всех одинаковое)
-        if await redis_client.exists("num_pairs") == 0:
-            await redis_client.set("num_pairs", len(pairs))
-        await add_user_pairs(user_id, pairs)
-    return await get_user_first_pair(user_id)
+        await user_memory.add_user_pairs(user_id, pairs)
+        await user_memory.mark_user_initialized(user_id)
+
+    max_num_pairs = await user_memory.get_max_num_pairs()
+    if max_num_pairs == 0:
+        total_pairs = count_image_pairs(data_directory)
+        await user_memory.set_max_num_pairs(total_pairs)
+
+    return await user_memory.get_user_first_pair(user_id)
 
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
-    """Render a main page for a user."""
     user_id = get_user_id_from_request(request)
     pair = await get_image_for_user(user_id)
 
     if pair is None:
-        raise HTTPException(status_code=404, detail="No image pairs available")
+        return templates.TemplateResponse("thank_you.html", {"request": request})
 
     image_paths = get_image_paths(pair)
-    n_pairs = await redis_client.llen(user_id)
-    tot_pairs = int(await redis_client.get("num_pairs"))
-    # print(n_pairs, tot_pairs)
+    n_pairs = await user_memory.get_user_num_pairs(user_id)
+    tot_pairs = await user_memory.get_max_num_pairs()
 
     return templates.TemplateResponse(
         "index.html",
@@ -97,29 +95,26 @@ class ImageSelection(BaseModel):
 
 @app.post("/")
 async def save_selection(request: Request, selection: ImageSelection):
-    """Process a user's choice."""
     user_id = get_user_id_from_request(request)
     lock_key = f"{user_id}_lock"
 
-    if await redis_client.setnx(lock_key, "locked"):
+    if await user_memory.acquire_lock(lock_key):
         try:
-            # check how many users selected also, not great to do it inside a lock
-            # I can make it as a new key in redis for user and set in get request
             count = await get_selection_count(
                 selection.imageId, selection.selectedSubId, selection.nonSelectedSubId
             )
-            await redis_client.expire(lock_key, 5)  # Set expiration time for the lock
             await db.insert_selection(
                 user_id,
                 selection.imageId,
                 selection.selectedSubId,
                 selection.nonSelectedSubId,
             )
-            await rm_first_user_pair(user_id)
+            await user_memory.rm_first_user_pair(user_id)
         except UniqueViolation:
+            await user_memory.release_lock(lock_key)
             raise HTTPException(status_code=400, detail="Duplicate request")
         finally:
-            await redis_client.delete(lock_key)
+            await user_memory.release_lock(lock_key)
     else:
         raise HTTPException(status_code=400, detail="Duplicate request")
 
@@ -128,12 +123,11 @@ async def save_selection(request: Request, selection: ImageSelection):
 
 @app.get("/new-images")
 async def get_new_images(request: Request):
-    # not used for now
     user_id = get_user_id_from_request(request)
     pair = await get_image_for_user(user_id)
 
     if pair is None:
-        raise HTTPException(status_code=404, detail="No image pairs available")
+        return {"images": []}
 
     image_paths = get_image_paths(pair)
     return {"images": image_paths}
@@ -142,8 +136,8 @@ async def get_new_images(request: Request):
 @app.get("/progress")
 async def get_progress(request: Request):
     user_id = get_user_id_from_request(request)
-    cur_progress = await redis_client.llen(user_id)
-    tot_progress = int(await redis_client.get("num_pairs"))
+    cur_progress = await user_memory.get_user_num_pairs(user_id)
+    tot_progress = await user_memory.get_max_num_pairs()
     return {"cur_progress": tot_progress - cur_progress, "tot_progress": tot_progress}
 
 

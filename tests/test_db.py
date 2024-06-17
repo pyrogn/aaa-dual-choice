@@ -2,8 +2,10 @@ import asyncio
 import pytest
 import pytest_asyncio
 from unittest.mock import AsyncMock, patch
-from dual_choice.db import db
+from dual_choice.db import Database
 import psycopg
+
+db = Database("url")
 
 
 @pytest_asyncio.fixture(scope="function")
